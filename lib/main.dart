@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'weather_service.dart';
 
@@ -102,12 +101,21 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             width: MediaQuery.of(context).size.width * 0.55,
                             child: TextField(
                               controller: _controller,
-                              decoration:  InputDecoration(
+                              decoration: InputDecoration(
+
                                 labelText: 'Enter city',
+                                labelStyle: TextStyle(color: Colors.black),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black, width: 3.0), // Thicker border when not focused
+                                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black45, width: 3.0), // Thicker border when focused
+                                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                                ),
                                 border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.yellow),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30)),
+                                  borderSide: BorderSide(color: Colors.black45, width: 3.0), // Default border
+                                  borderRadius: BorderRadius.all(Radius.circular(30)),
                                 ),
                               ),
                             ),
@@ -115,8 +123,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         ),
                         //const SizedBox(height: 20),
                         Padding(
-                          padding: EdgeInsets.only(top: 20),
+                          padding: EdgeInsets.only(top: 23),
                           child: ElevatedButton(
+                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue.shade100),),
                             onPressed: () {
                               if (_controller.text.isNotEmpty) {
                                 fetchWeatherData(_controller.text);
@@ -149,22 +158,29 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                   ),
                                 ),
                                  SizedBox(height: 8),
+                                Text(
+                                    'Max Temp: ${weatherData!['main']['temp_max']}°C'),
+                                Text(
+                                    'Min Temp: ${weatherData!['main']['temp_min']}°C'),
+
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: 140,
+                            width: 130,
                             height: 0,
                           ),
-                          Column(
-                            children: [
-                              Text('image'),
-                              Text(
-                                '${weatherData!['weather'][0]['description']}',
-
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                            ],
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text('image'),
+                                Text(
+                                  '${weatherData!['weather'][0]['description']}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -173,27 +189,26 @@ class _WeatherScreenState extends State<WeatherScreen> {
               ),
               Column(
                 children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft, // Gradient starts from top-left
-                        end: Alignment.bottomRight, // Gradient ends at bottom-right
-                        colors: [
-                          Color(0x80D1DCE5), // Light bluish-grey
-                          Color(0x80BCC4C9), // Muted grey
-                          Color.fromRGBO(211, 211, 211, 0.2), // Light grey with transparency
-                        ],
+                  SizedBox(height: 20),
+                  if (weatherData != null) ...[
+                    Container(
+                      width: double.infinity,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0x80D1DCE5),
+                            Color(0x80BCC4C9),
+                            Color.fromRGBO(211, 211, 211, 0.2),
+                          ],
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      children: [
-                        Padding(
+                      child: Row(
+                        children: [
+                          Padding(
                             padding: EdgeInsets.only(left: 10),
                             child: Text(
                               'Humidity',
@@ -262,12 +277,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       children: [
                         Padding(
                             padding: EdgeInsets.only(left: 10),
-                            child: Text('humidity')),
+                            child: Text('wind')),
                         SizedBox(
                           height: 0,
                           width: 220,
                         ),
-                        Text('value')
+                        Text('${weatherData!['wind']['speed']}m/s')
                       ],
                     ),
                   ),
@@ -335,7 +350,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                   )
                 ],
-              ),
+              ],),
             ],
           ),
         ),

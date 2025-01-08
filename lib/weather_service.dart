@@ -10,7 +10,10 @@ class WeatherService{
     );
 
     if (response.statusCode == 200){
+      print(city);
+      print(response.body);
       return json.decode(response.body);
+
 
     }
     else{
